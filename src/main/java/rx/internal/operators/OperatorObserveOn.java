@@ -68,7 +68,7 @@ public final class OperatorObserveOn<T> implements Operator<T, T> {
     }
 
     /** Observe through individual queue per observer. */
-    private static final class ObserveOnSubscriber<T> extends Subscriber<T> {
+    public static class ObserveOnSubscriber<T> extends Subscriber<T> {
         final Subscriber<? super T> child;
         final Scheduler.Worker recursiveScheduler;
         final ScheduledUnsubscribe scheduledUnsubscribe;
@@ -80,13 +80,13 @@ public final class OperatorObserveOn<T> implements Operator<T, T> {
         volatile boolean finished = false;
 
         @SuppressWarnings("unused")
-        volatile long requested = 0;
+        public volatile long requested = 0;
         
         @SuppressWarnings("rawtypes")
         static final AtomicLongFieldUpdater<ObserveOnSubscriber> REQUESTED = AtomicLongFieldUpdater.newUpdater(ObserveOnSubscriber.class, "requested");
 
         @SuppressWarnings("unused")
-        volatile long counter;
+        public volatile long counter;
         
         @SuppressWarnings("rawtypes")
         static final AtomicLongFieldUpdater<ObserveOnSubscriber> COUNTER_UPDATER = AtomicLongFieldUpdater.newUpdater(ObserveOnSubscriber.class, "counter");
@@ -226,9 +226,9 @@ public final class OperatorObserveOn<T> implements Operator<T, T> {
         }
     }
 
-    static final class ScheduledUnsubscribe implements Subscription {
+    public static class ScheduledUnsubscribe implements Subscription {
         final Scheduler.Worker worker;
-        volatile int once;
+        public volatile int once;
         static final AtomicIntegerFieldUpdater<ScheduledUnsubscribe> ONCE_UPDATER = AtomicIntegerFieldUpdater.newUpdater(ScheduledUnsubscribe.class, "once");
         volatile boolean unsubscribed = false;
 

@@ -171,14 +171,11 @@ import rx.subscriptions.*;
         return new EventLoopWorker(pool.get());
     }
 
-    private static final class EventLoopWorker extends Scheduler.Worker {
+    public static class EventLoopWorker extends Scheduler.Worker {
         private final CompositeSubscription innerSubscription = new CompositeSubscription();
         private final CachedWorkerPool pool;
         private final ThreadWorker threadWorker;
-        @SuppressWarnings("unused")
-        volatile int once;
-        static final AtomicIntegerFieldUpdater<EventLoopWorker> ONCE_UPDATER
-                = AtomicIntegerFieldUpdater.newUpdater(EventLoopWorker.class, "once");
+        public AtomicInteger once = new AtomicInteger();
 
         EventLoopWorker(CachedWorkerPool pool) {
             this.pool = pool;
@@ -187,7 +184,7 @@ import rx.subscriptions.*;
 
         @Override
         public void unsubscribe() {
-            if (ONCE_UPDATER.compareAndSet(this, 0, 1)) {
+            if (once.compareAndSet(0, 1)) {
                 // unsubscribe should be idempotent, so only do this once
                 pool.release(threadWorker);
             }

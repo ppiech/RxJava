@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 
 public final class RxThreadFactory implements ThreadFactory {
     final String prefix;
-    volatile long counter;
+    public volatile long counter;
     static final AtomicLongFieldUpdater<RxThreadFactory> COUNTER_UPDATER
             = AtomicLongFieldUpdater.newUpdater(RxThreadFactory.class, "counter");
 
