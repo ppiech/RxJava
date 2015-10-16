@@ -226,9 +226,9 @@ public final class OperatorObserveOn<T> implements Operator<T, T> {
         }
     }
 
-    public static class ScheduledUnsubscribe implements Subscription {
+    private static class ScheduledUnsubscribe implements Subscription {
         final Scheduler.Worker worker;
-        public volatile int once;
+        private volatile int once;
         static final AtomicIntegerFieldUpdater<ScheduledUnsubscribe> ONCE_UPDATER = AtomicIntegerFieldUpdater.newUpdater(ScheduledUnsubscribe.class, "once");
         volatile boolean unsubscribed = false;
 
@@ -243,7 +243,7 @@ public final class OperatorObserveOn<T> implements Operator<T, T> {
 
         @Override
         public void unsubscribe() {
-            if (ONCE_UPDATER.getAndSet(this, 1) == 0) {
+            if (once == 0 && ONCE_UPDATER.getAndSet(this, 1) == 0) {
                 worker.schedule(new Action0() {
                     @Override
                     public void call() {
