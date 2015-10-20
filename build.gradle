@@ -8,6 +8,9 @@ description = 'RxJava: Reactive Extensions for the JVM – a library for composi
 apply plugin: 'rxjava-project'
 apply plugin: 'java'
 
+group = 'com.github.lookout'
+description = 'RxJava: Reactive Extensions for the JVM – a library for composing asynchronous and event-based programs using observable sequences for the Java VM.  Forked to patch crashes.'
+ 
 dependencies {
     testCompile 'junit:junit-dep:4.10'
     testCompile 'org.mockito:mockito-core:1.8.5'
