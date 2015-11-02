@@ -18,7 +18,7 @@ package rx.subjects;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import rx.*;
 import rx.Observer;
@@ -115,13 +115,13 @@ public final class ReplaySubject<T> extends Subject<T, T> {
                 try {
                     for (;;) {
                         int idx = o.<Integer>index();
-                        int sidx = state.index;
+                        int sidx = state.index.get();
                         if (idx != sidx) {
                             Integer j = state.replayObserverFromIndex(idx, o);
                             o.index(j);
                         }
                         synchronized (o) {
-                            if (sidx == state.index) {
+                            if (sidx == state.index.get()) {
                                 o.emitting = false;
                                 skipFinal = true;
                                 break;
@@ -410,7 +410,7 @@ public final class ReplaySubject<T> extends Subject<T, T> {
      * @return Returns the number of subscribers.
      */
     /* Support test. */int subscriberCount() {
-        return ssm.state.observers.length;
+        return ssm.state.get().observers.length;
     }
 
     @Override
@@ -446,10 +446,7 @@ public final class ReplaySubject<T> extends Subject<T, T> {
         /** The termination flag. */
         private volatile boolean terminated;
         /** The size of the buffer. */
-        volatile int index;
-        @SuppressWarnings("rawtypes")
-        static final AtomicIntegerFieldUpdater<UnboundedReplayState> INDEX_UPDATER
-                = AtomicIntegerFieldUpdater.newUpdater(UnboundedReplayState.class, "index");
+        AtomicInteger index = new AtomicInteger();
         public UnboundedReplayState(int initialCapacity) {
             list = new ArrayList<Object>(initialCapacity);
         }
@@ -458,7 +455,7 @@ public final class ReplaySubject<T> extends Subject<T, T> {
         public void next(T n) {
             if (!terminated) {
                 list.add(nl.next(n));
-                INDEX_UPDATER.getAndIncrement(this); // release index
+                index.getAndIncrement(); // release index
             }
         }
 
@@ -471,7 +468,7 @@ public final class ReplaySubject<T> extends Subject<T, T> {
             if (!terminated) {
                 terminated = true;
                 list.add(nl.completed());
-                INDEX_UPDATER.getAndIncrement(this); // release index
+                index.getAndIncrement(); // release index
             }
         }
         @Override
@@ -479,7 +476,7 @@ public final class ReplaySubject<T> extends Subject<T, T> {
             if (!terminated) {
                 terminated = true;
                 list.add(nl.error(e));
-                INDEX_UPDATER.getAndIncrement(this); // release index
+                index.getAndIncrement(); // release index
             }
         }
 
@@ -511,7 +508,7 @@ public final class ReplaySubject<T> extends Subject<T, T> {
         @Override
         public Integer replayObserverFromIndex(Integer idx, SubjectObserver<? super T> observer) {
             int i = idx;
-            while (i < index) {
+            while (i < index.get()) {
                 accept(observer, i);
                 i++;
             }
@@ -526,7 +523,7 @@ public final class ReplaySubject<T> extends Subject<T, T> {
         
         @Override
         public int size() {
-            int idx = index; // aquire
+            int idx = index.get(); // aquire
             if (idx > 0) {
                 Object o = list.get(idx - 1);
                 if (nl.isCompleted(o) || nl.isError(o)) {
@@ -561,7 +558,7 @@ public final class ReplaySubject<T> extends Subject<T, T> {
         }
         @Override
         public T latest() {
-            int idx = index;
+            int idx = index.get();
             if (idx > 0) {
                 Object o = list.get(idx - 1);
                 if (nl.isCompleted(o) || nl.isError(o)) {

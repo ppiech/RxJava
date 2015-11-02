@@ -17,7 +17,7 @@
 package rx.observables;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import rx.*;
 import rx.Observable;
@@ -349,9 +349,7 @@ public abstract class AsyncOnSubscribe<S, T> implements OnSubscribe<T> {
 
     static final class AsyncOuterManager<S, T> implements Producer, Subscription, Observer<Observable<? extends T>> {
 
-        private volatile int isUnsubscribed;
-        @SuppressWarnings("rawtypes")
-        private static final AtomicIntegerFieldUpdater<AsyncOuterManager> IS_UNSUBSCRIBED = AtomicIntegerFieldUpdater.newUpdater(AsyncOuterManager.class, "isUnsubscribed");
+        private AtomicInteger isUnsubscribed = new AtomicInteger();
 
         private final AsyncOnSubscribe<S, T> parent;
         private final SerializedObserver<Observable<? extends T>> serializedSubscriber;
@@ -379,7 +377,7 @@ public abstract class AsyncOnSubscribe<S, T> implements OnSubscribe<T> {
 
         @Override
         public void unsubscribe() {
-            if (IS_UNSUBSCRIBED.compareAndSet(this, 0, 1)) {
+            if (isUnsubscribed.compareAndSet(0, 1)) {
                 synchronized (this) {
                     if (emitting) {
                         requests = new ArrayList<Long>();
@@ -401,7 +399,7 @@ public abstract class AsyncOnSubscribe<S, T> implements OnSubscribe<T> {
         
         @Override
         public boolean isUnsubscribed() {
-            return isUnsubscribed != 0;
+            return isUnsubscribed.get() != 0;
         }
 
         public void nextIteration(long requestCount) {
