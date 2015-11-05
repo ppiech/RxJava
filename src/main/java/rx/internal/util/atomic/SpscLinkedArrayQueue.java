@@ -33,14 +33,14 @@ import rx.internal.util.unsafe.Pow2;
  */
 public final class SpscLinkedArrayQueue<T> implements Queue<T> {
     static final int MAX_LOOK_AHEAD_STEP = Integer.getInteger("jctools.spsc.max.lookahead.step", 4096);
-    protected AtomicLong producerIndex = new AtomicLong();
+    protected final AtomicLong producerIndex = new AtomicLong();
     protected int producerLookAheadStep;
     protected long producerLookAhead;
     protected int producerMask;
     protected AtomicReferenceArray<Object> producerBuffer;
     protected int consumerMask;
     protected AtomicReferenceArray<Object> consumerBuffer;
-    protected AtomicLong consumerIndex = new AtomicLong();
+    protected final AtomicLong consumerIndex = new AtomicLong();
     private static final Object HAS_NEXT = new Object();
 
     public SpscLinkedArrayQueue(final int bufferSize) {

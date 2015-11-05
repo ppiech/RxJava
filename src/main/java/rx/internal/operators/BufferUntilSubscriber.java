@@ -60,7 +60,7 @@ public final class BufferUntilSubscriber<T> extends Subject<T, T> {
 
     /** The common state. */
     static final class State<T> {
-        AtomicReference<Observer<? super T>> observerRef = new AtomicReference<Observer<? super T>>(null);
+        final AtomicReference<Observer<? super T>> observerRef = new AtomicReference<Observer<? super T>>(null);
 
         boolean casObserverRef(Observer<? super T>  expected, Observer<? super T>  next) {
             return observerRef.compareAndSet(expected, next);

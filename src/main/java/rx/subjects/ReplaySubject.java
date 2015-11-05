@@ -446,7 +446,7 @@ public final class ReplaySubject<T> extends Subject<T, T> {
         /** The termination flag. */
         private volatile boolean terminated;
         /** The size of the buffer. */
-        AtomicInteger index = new AtomicInteger();
+        final AtomicInteger index = new AtomicInteger();
         public UnboundedReplayState(int initialCapacity) {
             list = new ArrayList<Object>(initialCapacity);
         }

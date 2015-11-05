@@ -175,7 +175,7 @@ import rx.subscriptions.*;
         private final CompositeSubscription innerSubscription = new CompositeSubscription();
         private final CachedWorkerPool pool;
         private final ThreadWorker threadWorker;
-        public AtomicInteger once = new AtomicInteger();
+        public final AtomicInteger once = new AtomicInteger();
 
         EventLoopWorker(CachedWorkerPool pool) {
             this.pool = pool;

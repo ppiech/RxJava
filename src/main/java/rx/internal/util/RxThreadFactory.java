@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public final class RxThreadFactory implements ThreadFactory {
     final String prefix;
-    public AtomicLong counter = new AtomicLong();
+    public final AtomicLong counter = new AtomicLong();
 
     public RxThreadFactory(String prefix) {
         this.prefix = prefix;

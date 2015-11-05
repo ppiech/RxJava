@@ -79,9 +79,9 @@ public final class OperatorObserveOn<T> implements Operator<T, T> {
         // the status of the current stream
         volatile boolean finished = false;
 
-        public AtomicLong requested = new AtomicLong();
+        public final AtomicLong requested = new AtomicLong();
         
-        public AtomicLong counter = new AtomicLong();
+        public final AtomicLong counter = new AtomicLong();
 
         volatile Throwable error;
 
@@ -220,7 +220,7 @@ public final class OperatorObserveOn<T> implements Operator<T, T> {
 
     private static class ScheduledUnsubscribe implements Subscription {
         final Scheduler.Worker worker;
-        private AtomicInteger once = new AtomicInteger();
+        private final AtomicInteger once = new AtomicInteger();
         volatile boolean unsubscribed = false;
 
         public ScheduledUnsubscribe(Scheduler.Worker worker) {

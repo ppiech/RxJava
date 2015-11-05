@@ -79,7 +79,7 @@ public class OperatorGroupBy<T, K, R> implements Operator<GroupedObservable<K, R
         // We should not call `unsubscribe()` until `groups.isEmpty() && child.isUnsubscribed()` is true.
         // Use `WIP_FOR_UNSUBSCRIBE_UPDATER` to monitor these statuses and call `unsubscribe()` properly.
         // Should check both when `child.unsubscribe` is called and any group is removed.
-        AtomicInteger wipForUnsubscribe = new AtomicInteger(1);
+        final AtomicInteger wipForUnsubscribe = new AtomicInteger(1);
 
         public GroupBySubscriber(
                 Func1<? super T, ? extends K> keySelector,
@@ -121,18 +121,18 @@ public class OperatorGroupBy<T, K, R> implements Operator<GroupedObservable<K, R
 
         private static final NotificationLite<Object> nl = NotificationLite.instance();
 
-        AtomicInteger completionEmitted = new AtomicInteger();
+        final AtomicInteger completionEmitted = new AtomicInteger();
 
         private static final int UNTERMINATED = 0;
         private static final int TERMINATED_WITH_COMPLETED = 1;
         private static final int TERMINATED_WITH_ERROR = 2;
 
         // Must be one of `UNTERMINATED`, `TERMINATED_WITH_COMPLETED`, `TERMINATED_WITH_ERROR`
-        AtomicInteger terminated = new AtomicInteger(UNTERMINATED);
+        final AtomicInteger terminated = new AtomicInteger(UNTERMINATED);
 
-        AtomicLong requested = new AtomicLong();
+        final AtomicLong requested = new AtomicLong();
 
-        AtomicLong bufferedCount = new AtomicLong();
+        final AtomicLong bufferedCount = new AtomicLong();
 
         @Override
         public void onStart() {

@@ -349,7 +349,7 @@ public abstract class AsyncOnSubscribe<S, T> implements OnSubscribe<T> {
 
     static final class AsyncOuterManager<S, T> implements Producer, Subscription, Observer<Observable<? extends T>> {
 
-        private AtomicInteger isUnsubscribed = new AtomicInteger();
+        private final AtomicInteger isUnsubscribed = new AtomicInteger();
 
         private final AsyncOnSubscribe<S, T> parent;
         private final SerializedObserver<Observable<? extends T>> serializedSubscriber;

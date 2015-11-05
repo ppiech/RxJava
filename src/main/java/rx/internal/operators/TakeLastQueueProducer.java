@@ -36,7 +36,7 @@ final class TakeLastQueueProducer<T> implements Producer {
         this.subscriber = subscriber;
     }
 
-    private AtomicLong requested = new AtomicLong(0);
+    private final AtomicLong requested = new AtomicLong(0);
 
     void startEmitting() {
         if (!emittingStarted) {

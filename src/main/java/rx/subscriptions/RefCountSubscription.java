@@ -27,7 +27,7 @@ import rx.Subscription;
 public final class RefCountSubscription implements Subscription {
     private final Subscription actual;
     static final State EMPTY_STATE = new State(false, 0);
-    AtomicReference<State> state = new AtomicReference<State>(EMPTY_STATE);
+    final AtomicReference<State> state = new AtomicReference<State>(EMPTY_STATE);
 
     private static final class State {
         final boolean isUnsubscribed;
@@ -124,7 +124,7 @@ public final class RefCountSubscription implements Subscription {
     /** The individual sub-subscriptions. */
     private static final class InnerSubscription implements Subscription {
         final RefCountSubscription parent;
-        AtomicInteger innerDone = new AtomicInteger();
+        final AtomicInteger innerDone = new AtomicInteger();
         public InnerSubscription(RefCountSubscription parent) {
             this.parent = parent;
         }

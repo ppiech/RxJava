@@ -61,7 +61,7 @@ public final class BackpressureDrainManager implements Producer {
         void complete(Throwable exception);
     }
 
-    protected AtomicLong requestedCount = new AtomicLong();
+    protected final AtomicLong requestedCount = new AtomicLong();
     /** Indicates if one is in emitting phase, guarded by this. */
     protected boolean emitting;
     /** Indicates a terminal state. */

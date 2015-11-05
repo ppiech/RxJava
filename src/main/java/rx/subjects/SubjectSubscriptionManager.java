@@ -35,7 +35,7 @@ import rx.subscriptions.Subscriptions;
 @SuppressWarnings({"unchecked", "rawtypes"})
 /* package */final class SubjectSubscriptionManager<T> implements OnSubscribe<T> {
     /** Contains the unsubscription flag and the array of active subscribers. */
-	AtomicReference<State<T>> state = new AtomicReference<State<T>>(State.EMPTY);
+	final AtomicReference<State<T>> state = new AtomicReference<State<T>>(State.EMPTY);
     /** Stores the latest value or the terminal value for some Subjects. */
     volatile Object latest;
     /** Indicates that the subject is active (cheaper than checking the state).*/

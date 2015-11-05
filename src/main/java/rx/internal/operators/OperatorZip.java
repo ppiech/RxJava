@@ -180,7 +180,7 @@ public final class OperatorZip<R> implements Operator<R, Observable<?>[]> {
         private final FuncN<? extends R> zipFunction;
         private final CompositeSubscription childSubscription = new CompositeSubscription();
 
-        volatile AtomicLong counter = new AtomicLong();
+        final AtomicLong counter = new AtomicLong();
 
         static final int THRESHOLD = (int) (RxRingBuffer.SIZE * 0.7);
         int emitted = 0; // not volatile/synchronized as accessed inside COUNTER_UPDATER block
